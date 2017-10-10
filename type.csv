@@ -1,0 +1,49 @@
+income,populationt,type
+"<20,000",0.5,half 
+"20,000 - 39,999",0.2,half 
+"40,000 - 59,999",NA,half 
+"60,000 - 79,999",NA,half 
+"80,000 - 99,999",NA,half 
+"100,000 - 119,999",NA,half 
+"120,000 - 139,999",NA,half 
+"140,000 <",NA,half 
+"<20,000",2.8,one door
+"20,000 - 39,999",2.8,one door
+"40,000 - 59,999",1.2,one door
+"60,000 - 79,999",1.3,one door
+"80,000 - 99,999",0.5,one door
+"100,000 - 119,999",0.4,one door
+"120,000 - 139,999",0.2,one door
+"140,000 <",0.2,one door
+"<20,000",13.7,two doors top freezers
+"20,000 - 39,999",13.8,two doors top freezers
+"40,000 - 59,999",9,two doors top freezers
+"60,000 - 79,999",6,two doors top freezers
+"80,000 - 99,999",2.9,two doors top freezers
+"100,000 - 119,999",2.2,two doors top freezers
+"120,000 - 139,999",1.3,two doors top freezers
+"140,000 <",2.5,two doors top freezers
+"<20,000",1.1,two doors bottom freezers
+"20,000 - 39,999",2.2,two doors bottom freezers
+"40,000 - 59,999",2,two doors bottom freezers
+"60,000 - 79,999",2.3,two doors bottom freezers
+"80,000 - 99,999",1.7,two doors bottom freezers
+"100,000 - 119,999",2,two doors bottom freezers
+"120,000 - 139,999",1.3,two doors bottom freezers
+"140,000 <",2.7,two doors bottom freezers
+"<20,000",3.9,two doors side by side
+"20,000 - 39,999",7.7,two doors side by side
+"40,000 - 59,999",5.9,two doors side by side
+"60,000 - 79,999",5.4,two doors side by side
+"80,000 - 99,999",4.2,two doors side by side
+"100,000 - 119,999",3,two doors side by side
+"120,000 - 139,999",2.2,two doors side by side
+"140,000 <",4.9,two doors side by side
+"<20,000",NA,Three or more doors
+"20,000 - 39,999",0.3,Three or more doors
+"40,000 - 59,999",0.3,Three or more doors
+"60,000 - 79,999",0.3,Three or more doors
+"80,000 - 99,999",0.4,Three or more doors
+"100,000 - 119,999",0.5,Three or more doors
+"120,000 - 139,999",0.2,Three or more doors
+"140,000 <",0.8,Three or more doors

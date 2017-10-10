@@ -1,0 +1,165 @@
+---
+title: "615 fridge"
+author: "Yukun He, Kailun Huang, Shijie Cai, Fei Shi"
+output: html_document
+date: "10/09/2017"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tibble)
+library(dplyr)
+library(tidyverse)
+
+```
+
+Our group want to see how different income would influence the size, type and age of the fridgertors be purchased. Through our data exploratory, we hope to find a good strategy for the refrigerators market. To do so, we choose the dataset from the U.S Energy Information Administration website under the category Appliances by Household income.
+
+
+```{r}
+##Load the all the .csv files from the directory into the environment.
+list_filenames <- list.files(pattern="*.csv")
+list_data <- list()
+
+for (i in 1:length(list_filenames))
+{
+list_data[[i]] <- read.csv(list_filenames[i])
+}
+names(list_data)<-list_filenames
+
+```
+
+```{r}
+##Extract all the .csv files into seperate datasets.
+income_data <- as.data.frame(list_data[1])##Whole income data
+size_data <- as.data.frame(list_data[2])
+type_data <- as.data.frame(list_data[3])##These two are datasets mannually collated into .csv files.
+income_data <- income_data[101:165, ] ##This is the part about fridge in the big dataset.
+
+colnames(income_data) <- c("","total","<20,000","20,000 - 39,999","40,000 - 59,999","60,000 - 79,999","80,000 - 99,999","100,000 - 119,999","120,000 - 139,999","140,000<")
+
+```
+
+###Number of fridges
+```{r}
+##Using dplyr to collate and rearrange the data for number of fridges.
+income_chart_1_data <- as.data.frame(t(income_data[3:4,-c(1,2)]))
+
+colnames(income_chart_1_data) <- c("population","two_or_more_fridge")
+income_chart_1_data <- rownames_to_column(income_chart_1_data, var="interval")
+
+two <- select(income_chart_1_data, "interval", "two_or_more_fridge")
+colnames(two)  <- c("interval","population")
+income_chart_1_data <- bind_rows(income_chart_1_data[ , -3], two)
+
+income_chart_1_data <- mutate(income_chart_1_data, numberoffridge = "one fridge")
+income_chart_1_data[9:16, 3] = "two or more fridges"
+
+income_chart_1_data[ , 1] <- sapply(income_chart_1_data[ , 1], as.factor)
+income_chart_1_data[ , 2] <- sapply(income_chart_1_data[ , 2], as.numeric)
+income_chart_1_data[ , 3] <- sapply(income_chart_1_data[ , 3], as.factor)
+
+##ggplot
+income1 <- ggplot() + geom_bar(data = income_chart_1_data, aes(y = population, x = numberoffridge, fill = interval), stat = "identity") + scale_fill_manual(values = c("#003333","#006666","#009999","#00CCCC","#00FFFF","#999999","#99FFFF","#CCFFFF")) + coord_flip()
+income1
+
+```
+From the first graph, we found out that for those families that only have one refrigerator, those families which household income is below 40000 dollar weighed about 50 percent. However, for those families that have two or more refrigerators, those families which household income is below 40000 dollar weighed only about 20 percent. This means income is a determinant in deciding whether a family would like to buy one more refrigerators. 
+
+###SIZE
+```{r}
+##Directly use the data that was previously manually collated.
+income_chart_2_data <- size_data
+as.factor(income_chart_2_data$income)
+as.factor(income_chart_2_data$populations)
+as.factor(income_chart_2_data$size)
+
+##ggplot
+size <- ggplot() + geom_bar(aes(y = size.csv.populations, x = size.csv.size, fill = size.csv.income), data = income_chart_2_data, stat = "identity") 
+
+size <- size + theme(axis.text.x  = element_text(angle = 1,hjust = 0.1)) + coord_flip()
+size
+
+```
+From the second plot we found out that for those families which have large size refrigerators, most of their household income are greater than 140000 dollar.  For those families which have medium size refrigerators, household income which are lower than 100000 dollar has a large proportion. For those families which have half size refrigerators, family household income which are lower than 20000 dollar weighed about 90 percent. If we categorized the “interval income” into poor=”<20000”, medium=”20000-140000” and rich=”>140000”, we can know half size refrigerator is popular in poor families, and large size refrigerator is popular in rich families.
+
+
+###TYPE
+```{r}
+##Directly use the data that was previously manually collated.
+income_chart_3_data <- type_data
+as.factor(income_chart_3_data$income)
+as.factor(income_chart_3_data$populationt)
+as.factor(income_chart_3_data$type)
+
+##ggplot
+type <- ggplot() + geom_bar(aes(y = type.csv.populationt, x = type.csv.type, fill = type.csv.income), data = income_chart_3_data, stat = "identity")
+
+type<-type+theme(axis.text.x  = element_text(angle=1,hjust = 0.01))+coord_flip()
+type
+
+```
+From the third plot we found out that two doors with top freezers refrigerator is the most popular type in the market cause about fifty percent of families own this type. For all types of refrigerators we found out each income interval is normally distributed. Thus, we want to conclude types of refrigerators are only families’ interests.
+
+###AGE
+```{r}
+##Using dplyr to collated and rearrange the data for interval of ages.
+income_chart_4_data <- as.data.frame(t(income_data[22:28,-c(1,2)]))
+
+colnames(income_chart_4_data) <- c("population","2 - 4 years old","5 - 9 years old","10 - 14 years old","15 - 19 years old","20< years old","do not use fridge")
+
+income_chart_4_data <- rownames_to_column(income_chart_4_data, var="interval")
+
+two_four <- select(income_chart_4_data, "interval", "2 - 4 years old")
+colnames(two_four)  <- c("interval","population")
+
+income_chart_4_data <- bind_rows(income_chart_4_data[ , -3], two_four)
+
+five_nine <- select(income_chart_4_data, "interval", "5 - 9 years old")
+colnames(five_nine)  <- c("interval","population")
+
+income_chart_4_data <- bind_rows(income_chart_4_data[ , -3], five_nine[-c(9:16), ])
+
+ten_fourteen <- select(income_chart_4_data, "interval", "10 - 14 years old")
+colnames(ten_fourteen)  <- c("interval","population")
+
+income_chart_4_data <- bind_rows(income_chart_4_data[ , -3], ten_fourteen[-c(9:24), ])
+
+fifteen_nineteen <- select(income_chart_4_data, "interval", "15 - 19 years old")
+colnames(fifteen_nineteen)  <- c("interval","population")
+
+income_chart_4_data <- bind_rows(income_chart_4_data[ , -3], fifteen_nineteen[-c(9:32), ])
+
+twenty <- select(income_chart_4_data, "interval", "20< years old")
+colnames(twenty)  <- c("interval","population")
+
+income_chart_4_data <- bind_rows(income_chart_4_data[ , -3], twenty[-c(9:40), ])
+
+no_fridge <- select(income_chart_4_data, "interval", "do not use fridge")
+colnames(no_fridge)  <- c("interval","population")
+
+income_chart_4_data <- bind_rows(income_chart_4_data[ , -3], no_fridge[-c(9:48), ])
+
+income_chart_4_data <- mutate(income_chart_4_data, range_of_age = "<2 years old")
+income_chart_4_data[9:16, 3] = "2 - 4 years old"
+income_chart_4_data[16:24, 3] = "5 - 9 years old"
+income_chart_4_data[24:32, 3] = "10 - 14 years old"
+income_chart_4_data[32:40, 3] = "15 - 19 years old"
+income_chart_4_data[40:48, 3] = "20< years old"
+income_chart_4_data[48:56, 3] = "do not use fridge"
+
+income_chart_4_data[ , 1] <- sapply(income_chart_4_data[ , 1], as.factor)
+income_chart_4_data[ , 2] <- sapply(income_chart_4_data[ , 2], as.numeric)
+income_chart_4_data[ , 3] <- sapply(income_chart_4_data[ , 3], as.factor)
+
+##ggplot
+income2 <- ggplot() + geom_bar(data = income_chart_4_data, aes(y = population, x = range_of_age, fill = interval), stat = "identity") + scale_fill_manual(values = c("#003333","#006666","#009999","#00CCCC","#00FFFF","#999999","#99FFFF","#CCFFFF")) + coord_flip()
+income2
+
+```
+From the fourth plot we found out that most families will replace their refrigerators in about 5 to 9 years. Since the income interval is normally distributed in each time interval, we want to conclude that the age of refrigerators used depend on each family’s demand. However, we do strongly recommend to have an appearance or style change in every five years.
+
+Conclusion: 
+For the refrigerator marketing, since most families use only one refrigerator, that makes the first one the most important. So, our advice for any refrigerator company would be produce more large and medium. Also because of the dominant consumers ‘income is between $20000 and $40000, producing more refrigerators satisfying their needs would maximum profit.
+
